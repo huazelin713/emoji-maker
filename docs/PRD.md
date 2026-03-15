@@ -17,7 +17,7 @@
 ## 2. 技术栈
 
 - 框架：Next.js 14（App Router，兼容 Cloudflare Pages Edge Runtime）
-- AI 推理：Pollinations.ai（免费，无需 API Key，直接 HTTP 请求）
+- AI 推理：SiliconFlow API（FLUX.1-schnell 模型，国内可访问，免费额度）
 - 图片处理：浏览器 Canvas API（纯前端，零服务端存储）
 - 部署：Cloudflare Pages + Workers
 - 样式：Tailwind CSS
@@ -138,24 +138,31 @@
 
 ## 7. API 集成
 
-### 7.1 Pollinations.ai API
+### 7.1 SiliconFlow API
 
-- 接口：`GET https://image.pollinations.ai/prompt/{encoded_prompt}?width=512&height=512&nologo=true`
-- 无需注册，无需 API Key，完全免费
-- 请求示例：
+- 接口：`POST https://api.siliconflow.cn/v1/images/generations`
+- 模型：`black-forest-labs/FLUX.1-schnell`（免费，国内服务器可访问）
+- 需要注册 SiliconFlow 账号获取 API Key：https://cloud.siliconflow.cn
+- 请求参数示例：
 
+```json
+{
+  "model": "black-forest-labs/FLUX.1-schnell",
+  "prompt": "emoji sticker of happy cat, white background, simple, clean, cartoon style",
+  "image_size": "512x512",
+  "num_inference_steps": 4,
+  "batch_size": 1
+}
 ```
-GET https://image.pollinations.ai/prompt/TOK%20emoji%20of%20happy%20cat%2C%20white%20background?width=512&height=512&nologo=true
-```
 
-- 响应：直接返回图片（PNG）
-- 图片跨域处理：通过 `/api/proxy-image` 服务端代理转发，再由 Canvas 处理下载
+- 响应：返回图片 URL，服务端转为 base64 后返回前端（避免跨域）
+- 环境变量：`SILICONFLOW_API_KEY`
 
 ### 7.2 Rate Limiting（前端）
 
 - localStorage 记录当日生成次数，key 格式：`emoji_count_YYYY-MM-DD`
 - 免费限额：3 次/天（前端软限制，引导付费）
-- Pollinations.ai 本身无限制，无需后端拦截
+- SiliconFlow 免费额度用完后需充值，建议后续加服务端限流
 
 ---
 

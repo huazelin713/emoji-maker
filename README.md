@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Emoji Maker
 
-## Getting Started
+AI-powered emoji generator for Slack & Discord. Built with Next.js + SiliconFlow FLUX.1 + Cloudflare Pages.
 
-First, run the development server:
+## Features
+
+- 🎨 AI emoji generation via SiliconFlow FLUX.1-schnell
+- ⬇️ One-click download as 128×128 PNG (Slack & Discord ready)
+- 🔒 No login required, no image storage
+- 📱 Mobile-friendly responsive design
+- 🔍 SEO optimized with sitemap & structured data
+
+## Pages
+
+| Route | Description |
+|---|---|
+| `/` | Homepage with AI generator |
+| `/emoji-maker-for-slack` | Slack-focused landing page |
+| `/emoji-maker-for-discord` | Discord-focused landing page |
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS
+- **AI**: SiliconFlow API (FLUX.1-schnell)
+- **Deployment**: Cloudflare Pages
+
+## Local Development
 
 ```bash
+git clone https://github.com/huazelin713/emoji-maker.git
+cd emoji-maker
+npm install
+cp .env.example .env.local
+# Edit .env.local and add your SiliconFlow API key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|---|---|
+| `SILICONFLOW_API_KEY` | API key from https://cloud.siliconflow.cn |
 
-## Learn More
+## Deploy to Cloudflare Pages
 
-To learn more about Next.js, take a look at the following resources:
+1. Connect this repo to Cloudflare Pages
+2. Build command: `npm run build`
+3. Output directory: `.next`
+4. Add environment variable: `SILICONFLOW_API_KEY`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+  page.tsx                        # Homepage
+  layout.tsx                      # Root layout + header/footer
+  sitemap.ts                      # Auto-generated sitemap
+  robots.ts                       # robots.txt
+  api/
+    generate/route.ts             # SiliconFlow API handler
+    proxy-image/route.ts          # Image proxy for CORS
+  emoji-maker-for-slack/page.tsx  # Slack landing page
+  emoji-maker-for-discord/page.tsx # Discord landing page
+components/
+  EmojiGenerator.tsx              # Core generator component
+docs/
+  PRD.md                          # MVP requirements document
+```
