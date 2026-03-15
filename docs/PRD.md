@@ -17,7 +17,7 @@
 ## 2. 技术栈
 
 - 框架：Next.js 14（App Router，兼容 Cloudflare Pages Edge Runtime）
-- AI 推理：Replicate API（fofr/sdxl-emoji 模型）
+- AI 推理：Pollinations.ai（免费，无需 API Key，直接 HTTP 请求）
 - 图片处理：浏览器 Canvas API（纯前端，零服务端存储）
 - 部署：Cloudflare Pages + Workers
 - 样式：Tailwind CSS
@@ -138,28 +138,24 @@
 
 ## 7. API 集成
 
-### 7.1 Replicate API
+### 7.1 Pollinations.ai API
 
-- 模型：`fofr/sdxl-emoji`
-- 调用方式：Next.js Route Handler（API Key 不暴露到前端）
-- 请求参数示例：
+- 接口：`GET https://image.pollinations.ai/prompt/{encoded_prompt}?width=512&height=512&nologo=true`
+- 无需注册，无需 API Key，完全免费
+- 请求示例：
 
-```json
-{
-  "prompt": "TOK emoji of [用户输入], white background",
-  "negative_prompt": "realistic, photo",
-  "num_outputs": 1
-}
+```
+GET https://image.pollinations.ai/prompt/TOK%20emoji%20of%20happy%20cat%2C%20white%20background?width=512&height=512&nologo=true
 ```
 
-- 响应：图片 URL 数组
-- 错误处理：超时 / API 限流 / 内容违规均需捕获并返回友好提示
+- 响应：直接返回图片（PNG）
+- 图片跨域处理：通过 `/api/proxy-image` 服务端代理转发，再由 Canvas 处理下载
 
 ### 7.2 Rate Limiting（前端）
 
 - localStorage 记录当日生成次数，key 格式：`emoji_count_YYYY-MM-DD`
-- 免费限额：3 次/天
-- 超限后展示引导文案，MVP 阶段不实际拦截 API
+- 免费限额：3 次/天（前端软限制，引导付费）
+- Pollinations.ai 本身无限制，无需后端拦截
 
 ---
 

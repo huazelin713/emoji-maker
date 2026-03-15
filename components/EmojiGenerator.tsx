@@ -65,26 +65,34 @@ export default function EmojiGenerator({ scene }: { scene?: string }) {
     }
   }
 
-  function handleDownload() {
+  async function handleDownload() {
     if (!imageUrl) return
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.src = imageUrl
-    img.onload = () => {
+    try {
+      // Fetch via proxy to avoid CORS issues with canvas
+      const res = await fetch(`/api/proxy-image?url=${encodeURIComponent(imageUrl)}`)
+      const blob = await res.blob()
+      const img = await createImageBitmap(blob)
       const canvas = document.createElement('canvas')
       canvas.width = 128
       canvas.height = 128
       const ctx = canvas.getContext('2d')!
       ctx.drawImage(img, 0, 0, 128, 128)
-      canvas.toBlob((blob) => {
-        if (!blob) return
-        const url = URL.createObjectURL(blob)
+      canvas.toBlob((b) => {
+        if (!b) return
+        const url = URL.createObjectURL(b)
         const a = document.createElement('a')
         a.href = url
         a.download = `emoji-${Date.now()}.png`
         a.click()
         URL.revokeObjectURL(url)
       }, 'image/png')
+    } catch {
+      // Fallback: direct download link
+      const a = document.createElement('a')
+      a.href = imageUrl
+      a.download = `emoji-${Date.now()}.png`
+      a.target = '_blank'
+      a.click()
     }
   }
 
