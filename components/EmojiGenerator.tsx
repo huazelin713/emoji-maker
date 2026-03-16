@@ -67,33 +67,11 @@ export default function EmojiGenerator({ scene }: { scene?: string }) {
 
   async function handleDownload() {
     if (!imageUrl) return
-    try {
-      // Fetch via proxy to avoid CORS issues with canvas
-      const res = await fetch(`/api/proxy-image?url=${encodeURIComponent(imageUrl)}`)
-      const blob = await res.blob()
-      const img = await createImageBitmap(blob)
-      const canvas = document.createElement('canvas')
-      canvas.width = 128
-      canvas.height = 128
-      const ctx = canvas.getContext('2d')!
-      ctx.drawImage(img, 0, 0, 128, 128)
-      canvas.toBlob((b) => {
-        if (!b) return
-        const url = URL.createObjectURL(b)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `emoji-${Date.now()}.png`
-        a.click()
-        URL.revokeObjectURL(url)
-      }, 'image/png')
-    } catch {
-      // Fallback: direct download link
-      const a = document.createElement('a')
-      a.href = imageUrl
-      a.download = `emoji-${Date.now()}.png`
-      a.target = '_blank'
-      a.click()
-    }
+    // imageUrl is base64, download directly
+    const a = document.createElement('a')
+    a.href = imageUrl
+    a.download = `emoji-${Date.now()}.png`
+    a.click()
   }
 
   return (
@@ -121,7 +99,7 @@ export default function EmojiGenerator({ scene }: { scene?: string }) {
       {loading && (
         <div className="mt-10 flex flex-col items-center gap-3 text-gray-400">
           <div className="w-10 h-10 border-4 border-purple-100 border-t-purple-600 rounded-full animate-spin" />
-          <p className="text-sm">Generating your emoji, hang tight...</p>
+          <p className="text-sm">Generating your emoji, this may take 10–20 seconds...</p>
         </div>
       )}
 

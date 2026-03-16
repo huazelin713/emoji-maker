@@ -1,3 +1,0 @@
-name = "emoji-maker"
-compatibility_date = "2024-03-16"
-pages = { output_dir = ".next" }
