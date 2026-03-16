@@ -31,5 +31,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: emoji-maker
-          directory: .next
+          directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
